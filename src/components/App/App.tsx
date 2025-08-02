@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 import { useState } from 'react';
 import { Movie } from '../../types/movie';
-import { getMovies } from '../../services/movieServices.ts';
+import { getMovies } from '../../services/movieService.ts';
 
 import SearchBar from '../SearchBar/SearchBar.tsx'
 import ErrorMessage from '../ErrorMessage/ErrorMessage.tsx';
