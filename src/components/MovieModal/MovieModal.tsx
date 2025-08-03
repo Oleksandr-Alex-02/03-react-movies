@@ -1,5 +1,7 @@
 
 import css from './MovieModal.module.css';
+import { createPortal } from 'react-dom';
+
 import { Movie } from '../../types/movie.ts'
 import { useEffect } from 'react';
 
@@ -12,24 +14,31 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onClose()
+            if (e.code === 'Escape') onClose();
         };
         window.addEventListener('keydown', handleEsc);
-        return () => window.addEventListener('keydown', handleEsc);
+        return () => { window.removeEventListener('keydown', handleEsc) };
     }, [onClose]);
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden'
+        return () => {
+            document.body.style.overflow = 'auto'
+        }
+    })
 
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) onClose();
     }
 
-    return (
+    return createPortal(
         <div className={css.backdrop} onClick={handleBackdropClick} role="dialog" aria-modal="true">
             <div className={css.modal}>
                 <button className={css.closeButton} onClick={onClose} aria-label="Close modal">
                     &times;
                 </button>
                 <img
-                    src={`https://image.tmdb.org/t/p/${movie.backdrop_path}`}
+                    src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
                     alt={movie.title}
                     className={css.image}
                 />
@@ -44,7 +53,8 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
                     </p>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

@@ -1,6 +1,6 @@
 
 import css from './App.module.css';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 import { useState } from 'react';
 import { Movie } from '../../types/movie';
@@ -26,11 +26,10 @@ export default function App() {
       setLoading(true);
       setError(false);
       const newArticles = await getMovies(query);
-      console.log(newArticles)
+
       if (newArticles.length === 0) {
         notify()
       }
-
       setMovies(newArticles)
     } catch {
       setError(true)
@@ -47,8 +46,17 @@ export default function App() {
       <SearchBar onSubmit={handleSearch} />
       {loading && <Loader />}
       {error && <ErrorMessage />}
-      <MovieGrid movies={movies} onMovieClick={handleMovieClick} />
+      <MovieGrid movies={movies} onSelect={handleMovieClick} />
       {selectedMovie && <MovieModal movie={selectedMovie} onClose={handleCloseModal} />}
+      <Toaster toastOptions={{
+        className: '',
+        style: {
+          background: '#ebcecbff',
+          border: '2px solid #713200',
+          padding: '16px',
+          color: '#0c0c0cff',
+        },
+      }} />
     </div>
   )
-}
+} 
